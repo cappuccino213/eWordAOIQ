@@ -46,10 +46,11 @@ class AssessmentScoreRuleModel(Base):
 
 	# 查询是否存在同名（id）的
 	@classmethod
-	def if_same_exist(cls, index_name: str, index_id: str):
+	def if_same_exist(cls, index_type: str, index_name: str, index_id: str):
 		try:
 			with Session() as session:
-				return session.query(cls).filter(or_(cls.indexName == index_name, cls.indexID == index_id)).first()
+				return session.query(cls).filter(cls.deleted == '0', cls.indexType == index_type).filter(
+					or_(cls.indexName == index_name, cls.indexID == index_id)).first()
 		except Exception as e:
 			logging.error(str(e))
 			return None

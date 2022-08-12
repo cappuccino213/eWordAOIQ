@@ -36,7 +36,7 @@ def query_by_id(primary_id: int, db_model: Base):
 
 
 # 增加
-def add(db_model):
+def create(db_model):
 	try:
 		with Session() as session:
 			session.add(db_model)
@@ -80,4 +80,6 @@ def logical_delete(primary_id: int, db_model: Base):
 if __name__ == "__main__":
 	pass
 	from assessment_rule_model import AssessmentScoreRuleModel
-	logging.info(query_by_id(2, AssessmentScoreRuleModel))
+	# logging.info(query_by_id(2, AssessmentScoreRuleModel))
+
+	logical_delete(14,AssessmentScoreRuleModel)

@@ -7,20 +7,21 @@
 from sanic import response
 from typing import Union
 
+
 """响应体封装"""
 
 
 # 200
-def resp_200(data: Union[list, dict, str], message="Success", status=True):
+def resp_200(data: Union[list, dict, str], message="Success", status=True, token=None):
 	return response.json(
-		body={'code': 200, 'message': message, 'data': data, 'status': status}
+		body={'code': 200, 'message': message, 'data': data, 'status': status, 'token': token}
 	)
 
 
 # 204
-def resp_204(message="No Content", status=True):
+def resp_204(message="No Content", status=True, token=None):
 	return response.json(
-		body={'code': 204, 'message': message, 'data': None, 'status': status}
+		body={'code': 204, 'message': message, 'data': None, 'status': status, 'token': token}
 	)
 
 

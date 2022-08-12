@@ -7,6 +7,7 @@
 from sanic import Blueprint
 from sanic_openapi import openapi
 
+from controller.auth import protected
 from models.testtask_project_model import *
 from models.request_schema import ProjectWeight, InvalidBug, SeverityBug
 from models.bug_model import invalid_bug_rate_statistic, severity_bug_rate_statistic
@@ -23,6 +24,7 @@ test_as_bp = Blueprint('test_as_bp', url_prefix='/api/TestAssessmentStatistic')
 @openapi.body({"application/json": ProjectWeight},
 			  description="参数均为必填项，其中owner传测试人员的account",
 			  required=True)
+@protected
 async def project_weight_query(request):
 	resp = TestTaskProjectModel().calculate_project_weight(request.json)  # json表示传入的对象时dict
 	if resp:
@@ -38,6 +40,7 @@ async def project_weight_query(request):
 @openapi.body({"application/json": InvalidBug},
 			  description="参数均为必填项，其中openedBy为string元素的list类型(bug提出人，传用户信息的account)，如：['zhangl']、['zyp','zhangl']",
 			  required=True)
+@protected
 async def invalid_bug_statistic(request):
 	resp = list()
 	for opened_by in request.json['openedBy']:
@@ -57,6 +60,7 @@ async def invalid_bug_statistic(request):
 @openapi.body({"application/json": SeverityBug},
 			  description="参数均为必填项，其中openedBy为string元素的list类型(bug提出人，传用户信息的account)，如：['zhangl']、['zyp','zhangl']",
 			  required=True)
+@protected
 async def severity_bug_statistic(request):
 	resp = list()
 	for opened_by in request.json['openedBy']:

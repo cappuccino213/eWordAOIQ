@@ -26,10 +26,14 @@ SWAGGER_DOC = {
 	"ACCESS_LOG": False
 }
 
+# 授权设置
+AUTH = {"IF_AUTH": True,
+		"SECRET": "eWordAOIQ_TomTaw@HZ"}
+
 # 运行配置
 RUN_CONFIG = {
 	"RUN_FILE_NAME": "main",  # 运行主函数文件名
-	"PORT": 8087,  # 运行监听的端口号
+	"PORT": 8088,  # 运行监听的端口号
 	"WORKERS": 4,  # 进程数
 	"RELOAD": True  # 是否重载
 }

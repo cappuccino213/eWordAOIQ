@@ -10,6 +10,7 @@ from sanic_openapi import openapi
 from models.request_schema import DevBugSta
 from models.bug_model import activated_bug_rate_statistic, severity_bug_rate_statistic
 from controller.response_encapsulate import *
+from controller.auth import protected
 
 """开发考核指标统计"""
 dev_as_bp = Blueprint('dev_as_bp', url_prefix='/api/DevAssessmentStatistic')
@@ -22,6 +23,7 @@ dev_as_bp = Blueprint('dev_as_bp', url_prefix='/api/DevAssessmentStatistic')
 @openapi.body({"application/json": DevBugSta},
 			  description="参数均为必填项，其中resolvedBy为string元素的list类型(bug解决者，传用户信息的account)，如：['hdh']、['hdh','xhyx']",
 			  required=True)
+@protected
 async def activated_bug_statistic(request):
 	resp = list()
 	for resolvedBy in request.json['resolvedBy']:
@@ -41,6 +43,7 @@ async def activated_bug_statistic(request):
 @openapi.body({"application/json": DevBugSta},
 			  description="参数均为必填项，其中resolvedBy为string元素的list类型(bug解决者，传用户信息的account)，如：['hdh']、['hdh','xhyx']",
 			  required=True)
+@protected
 async def severity_bug_statistic(request):
 	resp = list()
 	for resolvedBy in request.json['resolvedBy']:
