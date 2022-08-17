@@ -179,11 +179,11 @@ def activated_bug_rate_statistic(param: dict):
 			statistic_result['activatedBugCount'] / statistic_result['bugTotal'],
 			2)
 	else:
-		statistic_result['activatedBugBugRate'] = 0
+		statistic_result['activatedBugRate'] = 0
 	# 计算扣分
 	statistic_result['deductPoint'] = calculate_deduction_score('dev', 'activatedBug',
 																statistic_result['activatedBugRate'])
-	logging.info(f"获得严重bug统计结果：{statistic_result}")
+	logging.info(f"获得激活bug统计结果：{statistic_result}")
 	return statistic_result
 
 

@@ -69,7 +69,7 @@ class UserModel(Base):
 	def multiple_condition_query(cls, condition: dict):
 		try:
 			with Session() as session:
-				result = session.query(cls).filter(cls.deleted == '0')
+				result = session.query(cls).filter(cls.deleted == '0', cls.role != 'ud')  # 过滤掉角色是ui设计的，以防止没有数据报错
 				if condition.get('id'):
 					result = result.filter(cls.id == condition.get('id'))
 				if condition.get('dept'):
@@ -90,4 +90,3 @@ if __name__ == "__main__":
 	m = UserModel()
 	# print(um.get_userinfo_by_account('zhangl'))
 	res = m.multiple_condition_query({"account": "zyp"})
-

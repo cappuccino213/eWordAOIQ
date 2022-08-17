@@ -27,7 +27,7 @@ SWAGGER_DOC = {
 }
 
 # 授权设置
-AUTH = {"IF_AUTH": True,
+AUTH = {"IF_AUTH": False,
 		"SECRET": "eWordAOIQ_TomTaw@HZ"}
 
 # 运行配置
