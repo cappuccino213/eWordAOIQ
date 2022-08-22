@@ -61,11 +61,15 @@ async def query_assessment_rule(request):
 			  required=True)
 @protected
 async def update_assessment_rule(request):
-	resp = update(request.json, AssessmentScoreRuleModel)
-	if resp:
-		return resp_200(resp, "更新考核指标规则成功")
+	data = AssessmentScoreRuleModel(request.json)
+	if not data.if_same_exist(request.json['indexType'], request.json['indexName'], request.json['indexID']):
+		resp = update(request.json, AssessmentScoreRuleModel)
+		if resp:
+			return resp_200(resp, "更新考核指标规则成功")
+		else:
+			return resp_200({}, message="更新考核指标规则失败", status=False)
 	else:
-		return resp_200({}, message="更新考核指标规则失败", status=False)
+		return resp_200({}, message="修改考核指标规则失败,同类型指标已存在相同的指标名称或指标id", status=False)
 
 
 # 删除指标

@@ -38,5 +38,12 @@ RUN_CONFIG = {
 	"RELOAD": True  # 是否重载
 }
 
+# 版本信息
+VERSION_INFO = {
+	"softName": "全网云考核客观指标查询平台",
+	"version": "eWordAOIQ v1.0.0.001",
+	"companyName": "宁波全网云医疗科技股份有限公司"
+}
+
 if __name__ == "__main__":
 	pass

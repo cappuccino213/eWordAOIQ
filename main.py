@@ -17,6 +17,7 @@ from viewers.assessment_rule_viewer import ass_rule_bp
 from viewers.product_viewer import product_bp
 from viewers.test_assessment_statistic_viewer import test_as_bp
 from viewers.dev_assessment_statistic_viewer import dev_as_bp
+from viewers.version_info_viewer import version_bp
 from viewers.static_viewer import sbp
 
 from config import *
@@ -51,16 +52,20 @@ app.blueprint(test_as_bp)
 # 注册开发考核指标路由
 app.blueprint(dev_as_bp)
 
+#
+app.blueprint(version_bp)
+
 # 静态文件
-app.static("/login", "./index.html")
-app.static("/static/js", "./static/js", content_type="text/javascript")
-app.static("/static/css", "./static/css")
-app.static("/static/img", "./static/img")
+# app.static("/login", "./index.html")
+# app.static("/static/js", "./static/js", content_type="text/javascript")
+# app.static("/static/css", "./static/css")
+# app.static("/static/img", "./static/img")
+# /static/globalConfig.js
 # app.static("/assets/index.95dfda88.css", "./static/assets/index.95dfda88.css", content_type="text/css")
 # app.static("/vite.svg", "./static/vite.svg", content_type="image/svg+xml")
 
 # 注册静态
-# app.blueprint(sbp)
+app.blueprint(sbp)
 
 # 配置swagger文档
 app.config.API_VERSION = SWAGGER_DOC.get("VERSION")
