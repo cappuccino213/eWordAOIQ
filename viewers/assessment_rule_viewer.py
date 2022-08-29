@@ -26,7 +26,7 @@ ass_rule_bp = Blueprint('ass_rule_bp', url_prefix='/api/AssessmentRule')
 @protected
 async def add_assessment_rule(request):
 	data = AssessmentScoreRuleModel(request.json)
-	if not data.if_same_exist(request.json['indexType'], request.json['indexName'], request.json['indexID']):
+	if not data.if_same_exist(request.json['indexType'], request.json['indexID']):
 		create(data)
 		if data.id:
 			return resp_200(data.to_dict(), message="增加考核指标规则成功")
@@ -62,14 +62,15 @@ async def query_assessment_rule(request):
 @protected
 async def update_assessment_rule(request):
 	data = AssessmentScoreRuleModel(request.json)
-	if not data.if_same_exist(request.json['indexType'], request.json['indexName'], request.json['indexID']):
+	if not data.if_same_exist(request.json['indexType'], request.json['indexID'],
+							  request.json['id']):
 		resp = update(request.json, AssessmentScoreRuleModel)
 		if resp:
 			return resp_200(resp, "更新考核指标规则成功")
 		else:
 			return resp_200({}, message="更新考核指标规则失败", status=False)
 	else:
-		return resp_200({}, message="修改考核指标规则失败,同类型指标已存在相同的指标名称或指标id", status=False)
+		return resp_200({}, message="修改考核指标规则失败,同类型指标已存在相同的指标id", status=False)
 
 
 # 删除指标

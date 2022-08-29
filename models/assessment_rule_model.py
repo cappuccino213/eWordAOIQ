@@ -46,11 +46,17 @@ class AssessmentScoreRuleModel(Base):
 
 	# 查询是否存在同名（id）的
 	@classmethod
-	def if_same_exist(cls, index_type: str, index_name: str, index_id: str):
+	def if_same_exist(cls, index_type: str, index_id: str, primary_id=None):
 		try:
 			with Session() as session:
-				return session.query(cls).filter(cls.deleted == '0', cls.indexType == index_type).filter(
-					or_(cls.indexName == index_name, cls.indexID == index_id)).first()
+				# 是否是更新调用
+				if primary_id:
+					return session.query(cls).filter(cls.deleted == '0', cls.indexType == index_type,
+													 cls.indexID == index_id,
+													 cls.id != primary_id).first()
+				else:
+					return session.query(cls).filter(cls.deleted == '0', cls.indexType == index_type,
+													 cls.indexID == index_id).first()
 		except Exception as e:
 			logging.error(str(e))
 			return None
@@ -79,7 +85,8 @@ def multiple_condition_query(condition: dict):
 """计算扣分项函数"""
 
 
-def calculate_deduction_score(index_type, index_id, index_rate):
+# 根据占比计算分数
+def calculate_deduction_score_rate(index_type, index_id, index_rate):
 	"""
 	其中指标的规则从数据库获取，若获取不到，则直接返回None
 	:param index_rate: 指标比重，float类型
@@ -89,10 +96,12 @@ def calculate_deduction_score(index_type, index_id, index_rate):
 
 	指标sample：
 	id	indexType	indexName	indexID		scoreInterval	rule
-	1	test		无效缺陷		invalidBug	0|1|2|4|10	0|0-1%|2%-5%|6%-10%|11%-100%
-	2	test		严重缺陷		severityBug	0|1|2|3		31%-100%|20%-30%|10%-19%|0-9%
-	3	test		遗漏缺陷		missingBug	0|1|2|3		31%-100%|20%-30%|10%-19%|0-9%
-	4	dev			冒烟测试		smokeTest	0|1|2|3		31%-100%|20%-30%|10%-19%|0-9%
+	1	test		无效缺陷		invalidBug	0|1|2|4|10	0-1%|1%-2%|2%-5%|5%-10%|10%-100%
+	2	test		严重缺陷		severityBug	0|1|2|3		30%-100%|20%-30%|10%-20%|0-10%
+	3	test		遗漏缺陷		missingBug	0|1|3|5		0-1|1-2|2-5|5-100
+	4	dev			严重缺陷		severityBug	0|3|8|13|16	0-5%|5%-10%|10%-15%|15%-25%|25%-100%
+	5	dev			激活缺陷		activatedBug 0|1|2|5	0-2%|2%-5%|5%-10%|10%-100%
+	6	dev			遗漏缺陷		missingBug	0|1|3|5	    0-1|1-2|2-5|5-100
 	"""
 	# 获取指标规则，若有重复获取第一条
 	index_rule_obj = multiple_condition_query(dict(indexType=index_type, indexID=index_id))
@@ -104,7 +113,36 @@ def calculate_deduction_score(index_type, index_id, index_rate):
 		rule_list = index_rule['rule'].replace('%', '').split('|')
 		rule_interval_list = [rule.split('-') for rule in rule_list]
 		for rule_interval in rule_interval_list:
-			if int(rule_interval[0]) <= index_rate * 100 <= int(rule_interval[1]):
+			if int(rule_interval[0]) <= index_rate * 100 < int(rule_interval[1]):
+				ind = rule_interval_list.index(rule_interval)
+				return score_interval_list[ind]
+	else:
+		logging.error(f"未获取到{index_type}-{index_id}的指标规则")
+		return '-'
+
+
+# 根据指标数量计算分数
+def calculate_deduction_score(index_type, index_id, index_count):
+	"""
+	:param index_type: 指标类型
+	:param index_id: 指标id
+	:param index_count: 指标数量
+	:return: 返回扣分值，异常返回 -
+
+	指标sample：
+	id	indexType	indexName	indexID		scoreInterval	rule
+	1	dev		遗漏缺陷		missingBug	     0|1|3|5	    0-0|1-2|3-5|6-100
+	"""
+	index_rule_obj = multiple_condition_query(dict(indexType=index_type, indexID=index_id))
+	if index_rule_obj:
+		index_rule = index_rule_obj[0].to_dict()
+		logging.info(f"获取到{index_type}-{index_id}的指标：{index_rule}")
+		# 处理规则数据
+		score_interval_list = index_rule['scoreInterval'].split('|')
+		rule_list = index_rule['rule'].split('|')
+		rule_interval_list = [rule.split('-') for rule in rule_list]
+		for rule_interval in rule_interval_list:
+			if int(rule_interval[0]) <= index_count < int(rule_interval[1]):
 				ind = rule_interval_list.index(rule_interval)
 				return score_interval_list[ind]
 	else:
@@ -114,4 +152,5 @@ def calculate_deduction_score(index_type, index_id, index_rate):
 
 if __name__ == "__main__":
 	pass
-	print(calculate_deduction_score('dev', 'smokeTest', 0))
+	# print(calculate_deduction_score_rate('dev', 'smokeTest', 0))
+	print(calculate_deduction_score('dev', 'missingBug', 1))

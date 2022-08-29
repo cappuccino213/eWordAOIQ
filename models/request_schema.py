@@ -6,6 +6,8 @@
 """
 from datetime import date
 
+"""用于openapi文档中请求或响应对象的说明"""
+
 
 # 用户
 class UserBody:
@@ -64,11 +66,53 @@ class SeverityBug:
 	openedEndDate = date
 
 
+class TestMissingBugSta:
+	openedBy = [str]
+	openedBeginDate = date
+	openedEndDate = date
+
+
+class TestMissingBugDetails:
+	openedBy = str
+	openedBeginDate = date
+	openedEndDate = date
+
+
+class TestBugDetails:
+	openedBy = str
+	openedBeginDate = date
+	openedEndDate = date
+
+
 # 研发统计
 class DevBugSta:
 	resolvedBy = [str]
+	activatedBeginDate = date
+	activatedEndDate = date
+
+
+class DevMissingBugSta:
+	devName = [str]
+	openedBeginDate = date
+	openedEndDate = date
+
+
+class DevMissingBugDetails:
+	devName = str
+	openedBeginDate = date
+	openedEndDate = date
+
+
+class DevSeverityBugDetails:
+	resolvedBy = str
 	resolvedBeginDate = date
 	resolvedEndDate = date
+
+
+class DevActivatedBugDetails:
+	resolvedBy = str
+	activatedBeginDate = date
+	activatedEndDate = date
 
 
 if __name__ == "__main__":
