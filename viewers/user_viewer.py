@@ -18,10 +18,6 @@ import jwt
 user_bp = Blueprint('user_bp', url_prefix='/api/user')
 
 
-async def get_user_info():
-	pass
-
-
 # 获取用户列表
 @user_bp.route('list', methods=['POST'])
 @openapi.tag("用户")  # API标签
@@ -31,7 +27,7 @@ async def get_user_info():
 			  required=True)
 @protected
 async def get_user_list(request):
-	resp = UserModel().multiple_condition_query(request.json)  # json表示传入的对象时dict
+	resp = UserModel().multiple_condition_query(request.json)  # json表示传入的对象dict
 	if resp:
 		return resp_200(UserModel().to_json(resp))
 	else:

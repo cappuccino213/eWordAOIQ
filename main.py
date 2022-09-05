@@ -15,6 +15,10 @@ from sanic_cors import CORS
 from viewers.user_viewer import user_bp
 from viewers.assessment_rule_viewer import ass_rule_bp
 from viewers.product_viewer import product_bp
+from viewers.project_viewer import project_bp
+from viewers.build_viewer import build_bp
+from viewers.testtask_viewer import testtask_bp
+from viewers.smoke_test_record_viewer import smoke_test_bp
 from viewers.test_assessment_statistic_viewer import test_as_bp
 from viewers.dev_assessment_statistic_viewer import dev_as_bp
 from viewers.version_info_viewer import version_bp
@@ -46,25 +50,27 @@ app.blueprint(ass_rule_bp)
 # 注册产品
 app.blueprint(product_bp)
 
+# 注册项目
+app.blueprint(project_bp)
+
+# 注册测试单
+app.blueprint(testtask_bp)
+
+# 提交测试的程序版本信息
+app.blueprint(build_bp)
+
+# 注册冒烟记录
+app.blueprint(smoke_test_bp)
+
 # 注册测试考核指标路由
 app.blueprint(test_as_bp)
 
 # 注册开发考核指标路由
 app.blueprint(dev_as_bp)
 
-#
+# 产品版本信息
 app.blueprint(version_bp)
 
-# 静态文件
-# app.static("/login", "./index.html")
-# app.static("/static/js", "./static/js", content_type="text/javascript")
-# app.static("/static/css", "./static/css")
-# app.static("/static/img", "./static/img")
-# /static/globalConfig.js
-# app.static("/assets/index.95dfda88.css", "./static/assets/index.95dfda88.css", content_type="text/css")
-# app.static("/vite.svg", "./static/vite.svg", content_type="image/svg+xml")
-
-# 注册静态
 app.blueprint(sbp)
 
 # 配置swagger文档

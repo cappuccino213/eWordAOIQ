@@ -67,6 +67,9 @@ class BugModel(Base):
 				if condition.get('resolvedBeginDate') and condition.get('resolvedEndDate'):
 					total_count = total_count.filter(
 						cls.resolvedDate.between(condition['resolvedBeginDate'], condition['resolvedEndDate']))
+				if condition.get('activatedBeginDate') and condition.get('activatedEndDate'):
+					total_count = total_count.filter(
+						cls.resolvedDate.between(condition['activatedBeginDate'], condition['activatedEndDate']))
 				logging.info(f"查询对应条件下的bug总数为{total_count.scalar()}")
 				return total_count.scalar()
 		except Exception as e:

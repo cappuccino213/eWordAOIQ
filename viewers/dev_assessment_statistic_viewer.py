@@ -10,6 +10,7 @@ from sanic_openapi import openapi
 from models.request_schema import *
 from models.bug_model import missing_bug_score_statistic, activated_bug_rate_statistic, severity_bug_rate_statistic, \
 	BugModel
+from models.smoke_test_record_model import *
 from controller.response_encapsulate import *
 from controller.auth import protected
 
@@ -111,6 +112,7 @@ async def severity_bug_details_list(request):
 	else:
 		return resp_204()
 
+
 # 遗漏缺陷
 @dev_as_bp.route('MissingBugStatistic', methods=['POST'])
 @openapi.tag("开发考核指标")
@@ -129,6 +131,7 @@ async def missing_bug_statistic(request):
 		return resp_200(resp)
 	else:
 		return resp_204()
+
 
 # 遗漏详情
 @dev_as_bp.route('MissingBugDetails', methods=['POST'])
@@ -154,6 +157,44 @@ async def missing_bug_details_list(request):
 								 accessLink=f"http://192.168.1.43:8086/zentao/bug-view-{detail_obj.id}.html")
 			resp.append(response_body)
 		return resp_200(resp)
+	else:
+		return resp_204()
+
+
+# 冒烟测试通过率
+@dev_as_bp.route('SmokeTestStatistic', methods=['POST'])
+@openapi.tag("开发考核指标")
+@openapi.summary("冒烟测试失败率")
+@openapi.body({"application/json": DevSmokeTestStatistic},
+			  description="参数均为必填项，其中relatedPerson为string元素的list类型(责任相关人，传用户信息的account)，如：['wangj']、['hdh','wangj']",
+			  required=True)
+@protected
+async def smoke_test_statistic(request):
+	resp = list()
+	for relatedPerson in request.json['relatedPerson']:
+		resp.append(smoke_test_fail_statistic(relatedPerson=relatedPerson,
+											  begin=request.json['begin'],
+											  end=request.json['end']))
+	if resp:
+		return resp_200(resp)
+	else:
+		return resp_204()
+
+
+# 冒烟测试失败详情
+@dev_as_bp.route('SmokeTestFailDetails', methods=['POST'])
+@openapi.tag("开发考核指标")
+@openapi.summary("冒烟测试失败详情")
+@openapi.body({"application/json": DevSmokeTestFailDetails},
+			  description="参数均为必填项",
+			  required=True)
+@protected
+async def smoke_test_fail_details_statistic(request):
+	resp = SmokeTestRecordModel.smoke_test_fail_details(relatedPerson=request.json['relatedPerson'],
+														begin=request.json['begin'],
+														end=request.json['end'])
+	if resp:
+		return resp_200(SmokeTestRecordModel.to_json(resp), message="获取冒烟测试失败详情成功")
 	else:
 		return resp_204()
 

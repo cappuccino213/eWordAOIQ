@@ -6,7 +6,7 @@
 """
 
 from sqlalchemy import Column, Integer, String, Enum
-from sqlalchemy.sql import or_
+# from sqlalchemy.sql import or_
 
 from models.db_engine import *
 from controller.log_loguru import logging

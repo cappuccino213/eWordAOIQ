@@ -23,6 +23,39 @@ class LoginBody:
 	password = str
 
 
+# 测试单
+class TestTaskList:
+	id = int
+	product = int
+	owner = str
+	subStatus = str
+	begin = date
+	end = date
+
+
+# 冒烟测试记录
+class SmokeTestRecordAdd:
+	testTaskID = int
+	title = str
+	product = int
+	project = int
+	build = str
+	tester = str
+	smokeResult = str
+	failedReason = str
+	relatedPerson = str
+	begin = date
+	end = date
+
+
+class SmokeTestRecordUpdate:
+	testTaskID = int
+	tester = str
+	smokeResult = str
+	failedReason = str
+	relatedPerson = str
+
+
 # 指标
 class AssessmentRuleAdd:
 	indexType = str
@@ -113,6 +146,18 @@ class DevActivatedBugDetails:
 	resolvedBy = str
 	activatedBeginDate = date
 	activatedEndDate = date
+
+
+class DevSmokeTestStatistic:
+	relatedPerson = [str]
+	begin = date
+	end = date
+
+
+class DevSmokeTestFailDetails:
+	relatedPerson = str
+	begin = date
+	end = date
 
 
 if __name__ == "__main__":
