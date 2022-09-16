@@ -16,7 +16,7 @@ from controller.auth import protected
 testtask_bp = Blueprint('testtask_bp', url_prefix='/api/TestTaskList')
 
 
-# 获取用户列表
+# 获取测试单列表
 @testtask_bp.route('list', methods=['POST'])
 @openapi.tag("测试单")  # API标签
 @openapi.summary("获取测试单列表")  # API信息描述
@@ -27,8 +27,8 @@ async def get_testtask_list(request):
 											 product=request.json['product'],
 											 owner=request.json['owner'],
 											 subStatus=request.json['subStatus'],
-											 begin=request.json['begin'],  # json表示传入的对象时dict
-											 end=request.json['end'])  # json表示传入的对象时dict
+											 begin=request.json['begin'],
+											 end=request.json['end'])
 	if resp:
 		return resp_200(TestTaskModel().to_json(resp))
 	else:

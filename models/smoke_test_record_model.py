@@ -73,6 +73,29 @@ class SmokeTestRecordModel(Base):
 			logging.error(str(e))
 			return None
 
+	# 根据条件查询冒烟列表
+	@classmethod
+	def get_smoke_test_list(cls, **kwargs):
+		try:
+			with Session() as session:
+				smoke_test_records = session.query(cls)
+				if kwargs.get('testTaskID'):
+					smoke_test_records = smoke_test_records.filter(cls.testTaskID == kwargs.get('testTaskID'))
+				if kwargs.get('product'):
+					smoke_test_records = smoke_test_records.filter(cls.product == kwargs.get('product'))
+				if kwargs.get('tester'):
+					smoke_test_records = smoke_test_records.filter(cls.tester == kwargs.get('tester'))
+				if kwargs.get('smokeResult'):
+					smoke_test_records = smoke_test_records.filter(cls.smokeResult == kwargs.get('smokeResult'))
+				if kwargs.get('relatedPerson'):
+					smoke_test_records = smoke_test_records.filter(cls.relatedPerson == kwargs.get('relatedPerson'))
+				if kwargs.get('begin') and kwargs.get('end'):
+					smoke_test_records = smoke_test_records.filter(
+						cls.begin.between(kwargs['begin'], kwargs['end']))
+				return smoke_test_records.all()
+		except Exception as e:
+			logging.error(str(e))
+
 	# 根据测试单id查询
 	@classmethod
 	def query_by_testtaskid(cls, test_task_id: int):

@@ -30,5 +30,23 @@ async def get_build_info(request):
 		return resp_200({}, message=f"暂未查询到id:{resp.id}的版本信息", status=False)
 
 
+# 查询版本信息
+@build_bp.route('GetInfoList', methods=['GET'])
+@openapi.tag("程序版本信息")
+@openapi.summary("获取版本信息列表")
+@protected
+async def get_build_info_list(request):
+	resp_list = BuildModel().get_build_info_list()
+	if resp_list:
+		data_list = []
+		for resp in resp_list:
+			data = resp.to_dict()
+			data_dict = dict(id=data['id'], name=data['name'])
+			data_list.append(data_dict)
+		return resp_200(data_list, f"获取版本信息列表成功")
+	else:
+		return resp_200({}, message=f"暂未获取到版本信息列表", status=False)
+
+
 if __name__ == "__main__":
 	pass

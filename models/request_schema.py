@@ -34,6 +34,16 @@ class TestTaskList:
 
 
 # 冒烟测试记录
+class SmokeTestRecordList:
+	testTaskID = int
+	product = int
+	tester = str
+	smokeResult = str
+	relatedPerson = str
+	begin = date
+	end = date
+
+
 class SmokeTestRecordAdd:
 	testTaskID = int
 	title = str

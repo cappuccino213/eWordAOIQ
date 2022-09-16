@@ -194,7 +194,12 @@ async def smoke_test_fail_details_statistic(request):
 														begin=request.json['begin'],
 														end=request.json['end'])
 	if resp:
-		return resp_200(SmokeTestRecordModel.to_json(resp), message="获取冒烟测试失败详情成功")
+		# 增加跳转到禅道测试单连接
+		resp_list = []
+		for res in SmokeTestRecordModel.to_json(resp):
+			res['accessLink'] = f"http://192.168.1.43:8086/zentao/testtask-view-{res['testTaskID']}.html"
+			resp_list.append(res)
+		return resp_200(resp_list, message="获取冒烟测试失败详情成功")
 	else:
 		return resp_204()
 
