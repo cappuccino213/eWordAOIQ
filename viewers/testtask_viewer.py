@@ -30,7 +30,13 @@ async def get_testtask_list(request):
 											 begin=request.json['begin'],
 											 end=request.json['end'])
 	if resp:
-		return resp_200(TestTaskModel().to_json(resp))
+		# 当每一行返回的subStatus为空时，赋值为NA
+		resp_list = []
+		for resp_dict in TestTaskModel().to_json(resp):
+			if resp_dict['subStatus'] == '':
+				resp_dict['subStatus'] = 'NA'
+			resp_list.append(resp_dict)
+		return resp_200(resp_list)
 	else:
 		return resp_204()
 

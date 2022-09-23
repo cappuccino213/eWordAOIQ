@@ -58,7 +58,10 @@ class TestTaskModel(Base):
 				if kwargs.get('owner'):
 					test_tasks = test_tasks.filter(cls.owner == kwargs.get('owner'))
 				if kwargs.get('subStatus'):
-					test_tasks = test_tasks.filter(cls.subStatus == kwargs.get('subStatus'))
+					if kwargs.get('subStatus') == 'NA': # 当查询条件为NA时需要把数据库为空值的数据也带上
+						test_tasks = test_tasks.filter(cls.subStatus.in_(['NA', '']))
+					else:
+						test_tasks = test_tasks.filter(cls.subStatus == kwargs.get('subStatus'))
 				if kwargs.get('begin') and kwargs.get('end'):
 					test_tasks = test_tasks.filter(
 						cls.begin.between(kwargs['begin'], kwargs['end']))
@@ -82,4 +85,4 @@ class TestTaskModel(Base):
 
 if __name__ == "__main__":
 	# print(TestTaskModel().get_testtask_list(begin='2022-08-25', end='2022-08-26'))
-	TestTaskModel().sync_mark_smoke_result(920,'pass')
+	TestTaskModel().sync_mark_smoke_result(920, 'pass')

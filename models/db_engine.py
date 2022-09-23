@@ -13,7 +13,7 @@ from config import DATABASE_CONFIG
 from controller.log_loguru import logging
 
 # 创建引擎
-engine = create_engine(url=DATABASE_CONFIG.get('DATABASE_URL'), echo=DATABASE_CONFIG.get('SQL_ECHO'), future=True)
+engine = create_engine(url=DATABASE_CONFIG.get('DATABASE_URL'), echo=DATABASE_CONFIG.get('SQL_ECHO'), future=True,pool_pre_ping=True)
 
 # 定义会话生成器
 Session = sessionmaker(engine, autocommit=False, autoflush=False)
